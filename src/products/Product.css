@@ -1,0 +1,32 @@
+.image-test__arandasoft {
+    object-fit: cover;
+}
+
+.block-info {
+    border-radius: 8px;
+    border: 1px solid rgba(1,1,1,0.1);
+    padding: 2rem;
+    margin-top: 2.5rem;
+}
+.block-info > .text {
+    line-height: 46px;    
+}
+
+.block-info > .text span {
+    transition: 0.5s;
+    border: 2px solid transparent;
+}
+.block-info > .text span:hover {
+    
+    background-color: white!important;
+    color: #198754;
+    border: 2px solid #198754;
+}
+.block-info > .text span:hover a{
+    color: #198754;
+}
+
+.block-info > .text a {    
+    color: white;
+    text-decoration: none;
+}
