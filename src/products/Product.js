@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { ButtonToolbar, Table, Button, Image } from 'react-bootstrap';
+import { ButtonToolbar, Table, Button, Image, Form, Alert } from 'react-bootstrap';
 import Addproduct from './AddProduct';
 import Editproduct from './EditProduct';
+// TODO: habilitar import ReactPaginate from 'react-paginate';
 import './Product.css';
 
 class Product extends Component {
@@ -25,11 +26,18 @@ class Product extends Component {
                 categoryId: null,
                 image: ''
             },
-            imageUpload: ''
+            imageUpload: '',
+
+            // paginacion
+            perPage: 5,
+            page: 0,
+            pages: 0,
         }
 
         this.deleteProduct = this.deleteProduct.bind(this);
         this.refreshListProducts = this.refreshListProducts.bind(this);
+        this.handlePageClick = this.handlePageClick.bind(this);
+        this.handleEjecutarFiltrosBusqueda = this.handleEjecutarFiltrosBusqueda.bind(this);
     }
     
 
@@ -54,9 +62,20 @@ class Product extends Component {
                 console.log("categories ::: ", dataResponse.data)
                 this.setState({
                     categories: dataResponse.data,
+                    pages: Math.floor(dataResponse.data.length / perPage)
                 });
+
+                const {perPage} = this.state;
+
+
             })        
     }
+
+    // Paginación
+    handlePageClick = (event) => {
+        let page = event.selected;
+        this.setState({page})
+    }    
 
     deleteProduct(productId) {
         if (window.confirm("¿Desea eliminar este producto?")) {
@@ -94,15 +113,51 @@ class Product extends Component {
         this.refreshListProducts();
     }
 
+    // FILTROS : PENDIENTE
+    handleEjecutarFiltrosBusqueda(event) {
+
+    }
+
     render() {
-
-        const { products } = this.state;
-
+        
         let addModalClose = () => this.setState({addmodalShow: false})
         let editModalClose = () => this.setState({editmodalShow: false})
 
+        // paginación
+        const {page, perPage, pages, products} = this.state;
+        let items = products.slice(page * perPage, (page + 1) * perPage);        
+
         return (
-            <div className="">                
+            <div className="text-center block-info">
+                <Alert show={true} variant="success">
+                    <Alert.Heading>Filtros de búsqueda</Alert.Heading>
+                    <div className="row">
+                        <Form.Group className="mb-3 col-md-3">
+                            <Form.Label>Buscar por Nombre del producto</Form.Label>
+                            <Form.Control placeholder="Nombre..." disabled />
+                        </Form.Group>
+                        <Form.Group className="mb-3 col-md-3">
+                            <Form.Label>Buscar por la Descripción</Form.Label>
+                            <Form.Control placeholder="Descripción..." disabled />
+                        </Form.Group>
+                        <Form.Group className="mb-3 col-md-3">
+                            <Form.Label>Buscar por la Categoría</Form.Label>
+                            <Form.Select disabled>
+                                <option>Pendiente implementar</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3 col-md-3 align-items-end justify-content-center d-flex">
+                            <Button title="pendiente de implementar" onClick={() => this.handleEjecutarFiltrosBusqueda()} variant="outline-success" disabled>
+                                Buscar Productos
+                            </Button>
+                        </Form.Group>                                                        
+                    </div>
+                </Alert>         
+                <hr />
+
+
+     
+
                 <Table className="mt-4" striped bordered size="sm">
                     <thead>
                         <tr>
@@ -119,7 +174,7 @@ class Product extends Component {
                                 <tr key={ prod.id }>
                                     <td>{ prod.name }</td>
                                     <td>{ prod.description }</td>
-                                    <td>{ prod.category.name }</td>
+                                    <td>{ prod.category ? prod.category.name: '- implementar Lazy Load - ' }</td>
                                     <td>
                                         <Image 
                                             className="image-test__arandasoft"
@@ -171,6 +226,16 @@ class Product extends Component {
                         }
                     </tbody>
                 </Table>
+
+
+                {/*<ReactPaginate
+                    previousLabel={'prev'}
+                    nextLabel={'next'}
+                    pageCount={pages}
+                    onPageChange={this.handlePageClick}
+                    containerClassName={'pagination'}
+                    activeClassName={'active'}
+                /> */}               
 
                 <ButtonToolbar>
                     <Button className="mb-5" variant='primary' onClick={() => this.setState({ addmodalShow: true })}>

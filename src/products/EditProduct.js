@@ -218,7 +218,7 @@ class Editproduct extends Component {
                     show={ this.state.alertDialogModal }
                     onHide={handleCloseAlertDialogModal}
                 >
-                    <h3>Producto Agregado correctamente</h3>                
+                    <h3>Producto Editado correctamente</h3>                
                 </AlertDialog>
                
             </div>
